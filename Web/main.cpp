@@ -15,7 +15,7 @@ int main() {
     int ball_speed_y = 5;
     int ball_radius = 15;
 
-    InitWindow(screenWidth, screenHeight, "WSL2RaylibWASM");
+    InitWindow(screenWidth, screenHeight, "Boop Quest");
     SetTargetFPS(60);
 
     InitAudioDevice();
