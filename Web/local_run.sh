@@ -1,2 +1,2 @@
-g++ main.cpp -lraylib -o game
+g++ main.cpp minigames/* -lraylib -o game
 ./game

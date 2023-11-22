@@ -1,6 +1,5 @@
+#include <vector>
 #include <raylib.h>
 
-void test(int x, int y)
-{
-    DrawCircle(x, y, 20, RED);
-}
+void InitPiano(std::vector<Sound> sounds);
+void DrawPiano(Rectangle bounds);
