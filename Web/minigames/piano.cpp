@@ -23,11 +23,12 @@ void DrawPiano(Rectangle bounds)
     for (float i = r.x; i < r.width; i += colWid)
     {
         Vector2 mouse = GetMousePosition();
+        Vector2 touch = GetTouchPosition(0);
 
         Rectangle keyInactive = {i, r.y, colWid, r.height};
         Rectangle keyPressed = {i, r.y + 10, colWid, r.height - 20};
 
-        if (CheckCollisionPointRec(mouse, keyInactive))
+        if (CheckCollisionPointRec(mouse, keyInactive) || CheckCollisionPointRec(touch, keyInactive))
         {
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
             {
