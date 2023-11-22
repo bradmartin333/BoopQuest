@@ -5,6 +5,8 @@
 
 using namespace std;
 
+#define MAX_TOUCH_POINTS 10
+
 int main()
 {
     Color darkGreen = Color{20, 160, 133, 255};
@@ -13,11 +15,14 @@ int main()
     const int screenHeight = 600;
 
     InitWindow(screenWidth, screenHeight, "Boop Quest");
+
+    vector<Vector2> positions;
+
     SetTargetFPS(60);
 
     InitAudioDevice();
 
-    std::vector<Sound> sounds = {
+    vector<Sound> sounds = {
         LoadSound("res/sounds/getGood.wav"),
         LoadSound("res/sounds/getBad.wav"),
         LoadSound("res/sounds/spooky.wav"),
@@ -28,15 +33,22 @@ int main()
     enum SFX {
         Good, Bad, Spooky, Boop, Location, FunkyTown, BeatGame
     };
-    InitPiano(sounds);
-
-    PlaySound(sounds[SFX::FunkyTown]);
+    InitPiano(sounds, {10, screenHeight * 0.25, screenWidth - 20, (screenHeight * 0.75) - 10});
 
     while (WindowShouldClose() == false)
     {
+        // Get mouse and all touch positions
+        positions.clear();
+        positions.push_back(GetMousePosition());
+        int tCount = GetTouchPointCount();
+        if(tCount > MAX_TOUCH_POINTS) tCount = MAX_TOUCH_POINTS;
+        for (int i = 0; i < tCount; ++i) positions.push_back(GetTouchPosition(i));
+
         BeginDrawing();
         ClearBackground(darkGreen);
-        DrawPiano({10, screenHeight * 0.25, screenWidth - 20, (screenHeight * 0.75) - 10});
+
+        DrawPiano(positions);
+
         EndDrawing();
     }
 
