@@ -5,14 +5,16 @@ std::vector<Sound> _sounds;
 Color _whiteKeyInactive = Color{160, 160, 160, 255};
 Color _blackKeyInactive = Color{80, 80, 80, 255};
 
-void InitPiano(std::vector<Sound> sounds) {
+void InitPiano(std::vector<Sound> sounds)
+{
     _sounds = sounds;
     _numKeys = _sounds.size();
 }
 
 void DrawPiano(Rectangle bounds)
 {
-    if (_numKeys == -1) {
+    if (_numKeys == -1)
+    {
         _numKeys = 10;
     }
 
@@ -28,7 +30,8 @@ void DrawPiano(Rectangle bounds)
         Rectangle keyInactive = {i, r.y, colWid, r.height};
         Rectangle keyPressed = {i, r.y + 10, colWid, r.height - 20};
 
-        if (CheckCollisionPointRec(mouse, keyInactive) || CheckCollisionPointRec(touch, keyInactive))
+        if (CheckCollisionPointRec(mouse, keyInactive) ||
+            (GetGestureDetected() != GESTURE_NONE && CheckCollisionPointRec(touch, keyInactive)))
         {
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
             {
