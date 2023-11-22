@@ -15,11 +15,19 @@ void InitPiano(vector<Sound> sounds, Rectangle bounds)
     _sounds = sounds;
     _numKeys = _sounds.size();
     _debounce.resize(_numKeys);
-    std::fill(_debounce.begin(), _debounce.end(), false);
+    fill(_debounce.begin(), _debounce.end(), false);
 }
 
-void DrawPiano(vector<Vector2> positions)
+void DrawPiano(Vector2 position)
 {
+    bool touched = GetTouchPointCount() > 0;
+    bool leftClick = IsMouseButtonDown(MOUSE_BUTTON_LEFT);
+
+    if (!touched && !leftClick)
+    {
+        fill(_debounce.begin(), _debounce.end(), false);
+    }
+
     if (_numKeys == -1)
     {
         _numKeys = 10;
@@ -28,40 +36,37 @@ void DrawPiano(vector<Vector2> positions)
     Rectangle r = {_bounds.x, _bounds.y, _bounds.width - 5, _bounds.height};
     float colWid = r.width / (float)_numKeys;
     int col = 0;
-    vector<Sound> soundsToPlay;
 
     for (float i = r.x; i < r.width; i += colWid)
     {
         Rectangle keyInactive = {i, r.y, colWid, r.height};
         Rectangle keyPressed = {i, r.y + 10, colWid, r.height - 20};
 
-        for (int i = 0; i < positions.size(); i++)
+        if (CheckCollisionPointRec(position, keyInactive))
         {
-            Vector2 p = positions[i];
-            if (CheckCollisionPointRec(p, keyInactive))
+            if ((touched || leftClick) && !_debounce[col])
             {
-                if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !_debounce[col])
+                if (IsSoundPlaying(_sounds[col]))
                 {
-                    _debounce[col] = true;
-                    if (!IsSoundPlaying(_sounds[col]))
-                        soundsToPlay.push_back(_sounds[col]);
-                    DrawRectangleRec(keyPressed, col++ % 2 == 0 ? BLACK : WHITE);
+                    _debounce[col] = false;
                 }
                 else
                 {
-                    DrawRectangleRec(keyInactive, col++ % 2 == 0 ? BLACK : WHITE);
+                    PlaySound(_sounds[col]);
+                    _debounce[col] = true;
                 }
+
+                DrawRectangleRec(keyPressed, col++ % 2 == 0 ? BLACK : WHITE);
             }
             else
             {
-                _debounce[col] = false;
-                DrawRectangleRec(keyInactive, col++ % 2 == 0 ? _blackKeyInactive : _whiteKeyInactive);
+                DrawRectangleRec(keyInactive, col++ % 2 == 0 ? BLACK : WHITE);
             }
         }
-    }
-
-    for (int i = 0; i < soundsToPlay.size(); i++)
-    {
-        PlaySound(soundsToPlay[i]);
+        else
+        {
+            _debounce[col] = false;
+            DrawRectangleRec(keyInactive, col++ % 2 == 0 ? _blackKeyInactive : _whiteKeyInactive);
+        }
     }
 }
