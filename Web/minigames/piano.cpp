@@ -27,14 +27,13 @@ void DrawPiano(vector<Vector2> positions)
 
     Rectangle r = {_bounds.x, _bounds.y, _bounds.width - 5, _bounds.height};
     float colWid = r.width / (float)_numKeys;
-
     int col = 0;
+    vector<Sound> soundsToPlay;
+
     for (float i = r.x; i < r.width; i += colWid)
     {
         Rectangle keyInactive = {i, r.y, colWid, r.height};
         Rectangle keyPressed = {i, r.y + 10, colWid, r.height - 20};
-
-        vector<Sound> soundsToPlay;
 
         for (int i = 0; i < positions.size(); i++)
         {
@@ -59,10 +58,10 @@ void DrawPiano(vector<Vector2> positions)
                 DrawRectangleRec(keyInactive, col++ % 2 == 0 ? _blackKeyInactive : _whiteKeyInactive);
             }
         }
+    }
 
-        for (int i = 0; i < soundsToPlay.size(); i++)
-        {
-            PlaySound(soundsToPlay[i]);
-        }
+    for (int i = 0; i < soundsToPlay.size(); i++)
+    {
+        PlaySound(soundsToPlay[i]);
     }
 }
