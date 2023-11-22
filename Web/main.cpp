@@ -1,11 +1,13 @@
 #include <iostream>
 #include <raylib.h>
+#include "minigames/piano.h"
 
 using namespace std;
 
-int main() {
+int main()
+{
 
-    Color Dark_Green = Color{ 20, 160, 133, 255 };
+    Color Dark_Green = Color{20, 160, 133, 255};
 
     const int screenWidth = 800;
     const int screenHeight = 600;
@@ -23,7 +25,8 @@ int main() {
     Music music = LoadMusicStream("res/sounds/western.mp3");
     PlayMusicStream(music);
 
-    while (WindowShouldClose() == false) {
+    while (WindowShouldClose() == false)
+    {
         UpdateMusicStream(music);
 
         BeginDrawing();
@@ -42,6 +45,7 @@ int main() {
         }
 
         DrawCircle(ball_x, ball_y, ball_radius, WHITE);
+        test(screenWidth / 2, screenHeight / 2);
         EndDrawing();
     }
 
