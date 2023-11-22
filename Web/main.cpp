@@ -25,13 +25,18 @@ int main()
         LoadSound("res/sounds/getLocation.wav"),
         LoadSound("res/sounds/funkyTown.wav"),
         LoadSound("res/sounds/beatGame.wav")};
+    enum SFX {
+        Good, Bad, Spooky, Boop, Location, FunkyTown, BeatGame
+    };
     InitPiano(sounds);
+
+    PlaySound(sounds[SFX::FunkyTown]);
 
     while (WindowShouldClose() == false)
     {
         BeginDrawing();
         ClearBackground(darkGreen);
-        DrawPiano({10, 10, screenWidth - 20, screenHeight * 0.75});
+        DrawPiano({10, screenHeight * 0.25, screenWidth - 20, (screenHeight * 0.75) - 10});
         EndDrawing();
     }
 
@@ -39,7 +44,7 @@ int main()
     {
         UnloadSound(sounds[i]);
     }
-    
+
     CloseAudioDevice();
     CloseWindow();
     return 0;
