@@ -1,3 +1,5 @@
+#include <iostream>
+#include <algorithm>
 #include "piano.h"
 
 using namespace std;
@@ -11,8 +13,34 @@ Color _blackKeyInactive = Color{80, 80, 80, 255};
 
 void InitPiano(vector<Sound> sounds, Rectangle bounds)
 {
+    // Randomly assign order of sounds to keys
+    srand(time(NULL));
+    vector<double> numbers;
+    for (int i = 0; i < sounds.size(); i++)
+    {
+        double d = static_cast<double>(rand()) / RAND_MAX;
+        numbers.push_back(d);
+    }
+    vector<int> indexOfNumbers;
+    for (int i = 0; i < numbers.size(); i++)
+    {
+        indexOfNumbers.push_back(i);
+    }
+    sort(
+        indexOfNumbers.begin(), indexOfNumbers.end(),
+        [numbers](int leftIndex, int rightIndex)
+        {
+            return numbers[leftIndex] < numbers[rightIndex]; // Sort in ascending order
+        });
+    for (int i = 0; i < indexOfNumbers.size(); i++)
+    {
+        _sounds.push_back(sounds[indexOfNumbers[i]]);
+        cout << indexOfNumbers[i] << " " << flush;
+    }
+    cout << "\n" << flush;
+
+    // Set other globals
     _bounds = bounds;
-    _sounds = sounds;
     _numKeys = _sounds.size();
     _debounce.resize(_numKeys);
     fill(_debounce.begin(), _debounce.end(), false);
@@ -46,16 +74,8 @@ void DrawPiano(Vector2 position)
         {
             if ((touched || leftClick) && !_debounce[col])
             {
-                if (IsSoundPlaying(_sounds[col]))
-                {
-                    _debounce[col] = false;
-                }
-                else
-                {
-                    PlaySound(_sounds[col]);
-                    _debounce[col] = true;
-                }
-
+                PlaySound(_sounds[col]);
+                _debounce[col] = true;
                 DrawRectangleRec(keyPressed, col++ % 2 == 0 ? BLACK : WHITE);
             }
             else
