@@ -58,7 +58,7 @@ int main()
         LoadTexture("res/character/wait_6.png"),
         LoadTexture("res/character/walk_8.png")};
 
-    InitPiano(sounds, {10, screenHeight * 0.25, screenWidth - 20, (screenHeight * 0.75) - 10});
+    InitPiano(sounds, {10, screenHeight * 0.25f, screenWidth - 20, (screenHeight * 0.75f) - 10});
 
     // SPRITE TESTING
     // float frameWidth = (float)(characterWaiting.width / NUM_FRAMES_PER_LINE);
