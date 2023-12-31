@@ -3,9 +3,6 @@
 #include <raylib.h>
 #include "minigames/piano.h"
 
-#define NUM_FRAMES_PER_LINE 6
-#define NUM_LINES 1
-
 using namespace std;
 
 int main()
@@ -20,17 +17,6 @@ int main()
     SetTargetFPS(60);
 
     InitAudioDevice();
-
-    enum SFX
-    {
-        Good,
-        Bad,
-        Spooky,
-        Boop,
-        Location,
-        FunkyTown,
-        BeatGame
-    };
 
     vector<Sound> sounds = {
         LoadSound("res/sounds/getGood.wav"),
@@ -58,41 +44,10 @@ int main()
         LoadTexture("res/character/wait_6.png"),
         LoadTexture("res/character/walk_8.png")};
 
-    InitPiano(sounds, {10, screenHeight * 0.25f, screenWidth - 20, (screenHeight * 0.75f) - 10});
-
-    // SPRITE TESTING
-    // float frameWidth = (float)(characterWaiting.width / NUM_FRAMES_PER_LINE);
-    // float frameHeight = (float)(characterWaiting.height / NUM_LINES);
-    // int currentFrame = 0;
-    // int currentLine = 0;
-    // Rectangle frameRec = {0, 0, frameWidth, frameHeight};
-    // float frameScaling = 2.5f;
-    // Rectangle scaledRect = {0, 0, frameWidth * frameScaling, frameHeight * frameScaling};
-    // Vector2 frameOrigin = {screenWidth / -2.0f + scaledRect.width / 2.0f, -scaledRect.height / (frameScaling * frameScaling)};
-    // int framesCounter = 0;
-    // //
+    InitPiano(sounds, textures, {10, screenHeight * 0.25f, screenWidth - 20, (screenHeight * 0.75f) - 10});
 
     while (WindowShouldClose() == false)
     {
-        // SPRITE TESTING
-        // framesCounter++;
-        // if (framesCounter > 5)
-        // {
-        //     currentFrame++;
-        //     if (currentFrame >= NUM_FRAMES_PER_LINE)
-        //     {
-        //         currentFrame = 0;
-        //         currentLine++;
-        //         if (currentLine >= NUM_LINES)
-        //         {
-        //             currentLine = 0;
-        //         }
-        //     }
-        //     framesCounter = 0;
-        // }
-        // frameRec.x = frameWidth * currentFrame;
-        // frameRec.y = frameHeight * currentLine;
-
         Vector2 position = GetMousePosition();
         if (GetTouchPointCount() > 0)
         {
@@ -103,7 +58,7 @@ int main()
         ClearBackground(darkGreen);
 
         DrawPiano(position);
-        //DrawTexturePro(characterWaiting, frameRec, scaledRect, frameOrigin, 0, WHITE);
+        DrawSprite();
 
         EndDrawing();
     }
