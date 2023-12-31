@@ -56,10 +56,8 @@ int main()
 
         BeginDrawing();
         ClearBackground(darkGreen);
-
         DrawPiano(position);
         DrawSprite();
-
         EndDrawing();
     }
 
