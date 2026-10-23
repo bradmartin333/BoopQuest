@@ -75,21 +75,6 @@
             margin-bottom: 4%;
         }
 
-        .screw {
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 35% 35%, #ddd, #777);
-        }
-
-        .screw::after {
-            content: "";
-            position: absolute;
-            inset: 5px 2px;
-            background: #444;
-        }
-
         .bezel {
             padding: 3.5%;
             background: #0b0b0b;
@@ -205,8 +190,6 @@
 <body>
     <main>
         <div class="device">
-            <div class="screw" style="top: 7%; left: 7%"></div>
-            <div class="screw" style="top: 7%; right: 7%"></div>
             <div class="logo">boop</div>
             <div class="bezel"><canvas id="lcd"></canvas></div>
             <div class="buttons">
