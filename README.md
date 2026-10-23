@@ -15,8 +15,4 @@ The web version runs the original Arduino sketch on an emulated 16x2 LCD, three 
 
 On the Toy Organ, hold buttons together to play chords, and hold all three to exit. On a phone, use multiple fingers.
 
-To run it locally, serve the `Web` folder over HTTP. ES modules don't load from `file://`.
-
-```sh
-cd Web && python3 -m http.server
-```
+To run it locally, serve the `Web` folder over HTTP.
