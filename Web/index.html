@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Boop Quest</title>
+    <link rel="icon" href="data:,">
+    <style>
+        :root {
+            --page: #17110e;
+            --case: #141414;
+            --case-edge: #2a2a2a;
+            --ink: #d9d2cc;
+            --muted: #8a817a;
+            --green: #3fbf5a;
+            --green-dark: #1f7a33;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            height: 100%;
+        }
+
+        body {
+            background: radial-gradient(ellipse at 50% 30%, #162b18 0%, var(--page) 70%);
+            color: var(--ink);
+            font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        main {
+            width: min(100vw - 32px, 560px, (100dvh - 100px) * 1.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .device {
+            position: relative;
+            width: 100%;
+            padding: 6% 6% 9%;
+            background:
+                repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.025) 0 2px, transparent 2px 5px),
+                var(--case);
+            border: 3px solid var(--case-edge);
+            border-radius: 9% 9% 46% 46% / 12% 12% 40% 40%;
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6), inset 0 2px 0 rgba(255, 255, 255, 0.06);
+            transition: transform 450ms ease-in-out;
+        }
+
+        /* The treasure dive is played with the box turned sideways; scaled to stay in its slot. */
+        .diving .device {
+            transform: rotate(-90deg) scale(0.8);
+        }
+
+        .logo {
+            text-align: center;
+            font: 900 clamp(22px, 7vw, 36px) / 1 "Arial Black", "Helvetica Neue", sans-serif;
+            letter-spacing: 0.02em;
+            color: #0b0b0b;
+            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.18), 0 -1px 0 rgba(0, 0, 0, 0.8);
+            margin-bottom: 4%;
+        }
+
+        .bezel {
+            padding: 3.5%;
+            background: #0b0b0b;
+            border-radius: 4px;
+            box-shadow: inset 0 0 0 2px #222, inset 0 6px 12px rgba(0, 0, 0, 0.8);
+        }
+
+        #lcd {
+            width: 100%;
+            aspect-ratio: 101 / 23;
+            display: block;
+            border-radius: 2px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 6% 8% 0;
+        }
+
+        .buttons button {
+            width: 24%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            border: 0;
+            padding: 0;
+            cursor: pointer;
+            touch-action: none;
+            background: radial-gradient(circle at 40% 35%, #6fe08a 0%, var(--green) 45%, var(--green-dark) 100%);
+            box-shadow: 0 0 0 6px #050505, 0 0 0 8px #2b2b2b, 0 5px 0 6px #050505;
+            transition: transform 40ms, filter 40ms;
+            outline: none;
+        }
+
+        .buttons button:nth-child(2) {
+            margin-top: 9%;
+        }
+
+        .buttons button.pressed {
+            transform: translateY(3px) scale(0.97);
+            filter: brightness(0.82);
+        }
+
+        .buttons button:focus-visible {
+            box-shadow: 0 0 0 6px #050505, 0 0 0 9px #9ad;
+        }
+
+        .hint {
+            margin: 18px 0 0;
+            font-size: 13px;
+            color: var(--muted);
+            text-align: center;
+        }
+
+        .touch-hint,
+        .dive-hint {
+            display: none;
+        }
+
+        .diving .key-hint {
+            display: none;
+        }
+
+        .diving .dive-hint {
+            display: inline;
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+            .key-hint,
+            .diving .dive-hint {
+                display: none;
+            }
+
+            .touch-hint {
+                display: inline;
+            }
+        }
+
+        kbd {
+            font: inherit;
+            padding: 0 4px;
+            border: 1px solid #4a423c;
+            border-radius: 3px;
+        }
+
+        #start {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(10, 7, 5, 0.55);
+            border: 0;
+            color: var(--ink);
+            font: 600 20px system-ui, sans-serif;
+            cursor: pointer;
+        }
+
+        #start[hidden] {
+            display: none;
+        }
+
+        #start span {
+            padding: 14px 26px;
+            border-radius: 999px;
+            background: var(--green-dark);
+            box-shadow: 0 0 0 2px var(--green);
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <div class="device">
+            <div class="logo">boop</div>
+            <div class="bezel"><canvas id="lcd"></canvas></div>
+            <div class="buttons">
+                <button type="button" aria-label="Left"></button>
+                <button type="button" aria-label="Select"></button>
+                <button type="button" aria-label="Right"></button>
+            </div>
+        </div>
+        <p class="hint">
+            <span class="dive-hint"><kbd>↓</kbd> dives · <kbd>←</kbd> <kbd>→</kbd> switch sides</span>
+            <span class="touch-hint">Use several fingers to play chords on the Toy Organ</span>
+        </p>
+    </main>
+    <button id="start" type="button"><span>Tap to power on</span></button>
+    <script type="module" src="js/main.js"></script>
+</body>
+
+</html>

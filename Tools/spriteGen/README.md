@@ -1,1 +1,0 @@
-Python script (Mostly written by Bard) created for turning PNGs from [muchopixels](https://muchopixels.itch.io/character-animation-asset-pack) into Raylib friendly PNGs.
