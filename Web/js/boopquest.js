@@ -461,7 +461,7 @@ async function beaten() {
   lcd.setCursor(0, 1); lcd.print("<  Beat  Game  >");
   if (but[1] == HIGH) {
     lcd.clear();
-    lcd.setCursor(2, 0); lcd.print("tinyurl.com/"); lcd.setCursor(4, 1); lcd.print("y9v5nd8a");
+    lcd.setCursor(1, 0); lcd.print("SORRY, ARDUINO"); lcd.setCursor(2, 1); lcd.print("PLAYERS ONLY");
     for (let x = 0; x < 3; x++) {
       await beatGame();
     }
