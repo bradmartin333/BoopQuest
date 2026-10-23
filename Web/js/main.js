@@ -1,14 +1,16 @@
 // Wires the page to the emulated hardware: input, rendering, and starting the sketch.
-import { buttons, setButton, backlight, initAudio, run } from './arduino.js';
+import { setButton, backlight, initAudio, run } from './arduino.js';
 import { drawLcd } from './lcd.js';
-import { loadCharacter, drawCharacter, walk } from './character.js';
-import { lcd, setup, loop, collectAllBoops } from './boopquest.js';
+import { lcd, setup, loop, collectAllBoops, isDiving } from './boopquest.js';
 
 const KEYS = {
   KeyA: 0, ArrowLeft: 0,
   KeyS: 1, ArrowDown: 1, Space: 1, Enter: 1,
   KeyD: 2, ArrowRight: 2,
 };
+// During the dive the device is turned sideways: Left is at the bottom, Right at the top.
+const DIVE_KEYS = { ...KEYS, ArrowDown: 0, ArrowLeft: 1, ArrowRight: 1, ArrowUp: 2 };
+let diving = false;
 
 const buttonEls = [...document.querySelectorAll('.buttons button')];
 const pointers = buttonEls.map(() => new Set());
@@ -16,9 +18,6 @@ const keys = buttonEls.map(() => new Set());
 
 function refresh(i) {
   const held = pointers[i].size > 0 || keys[i].size > 0;
-  if (held && !buttons[i] && i !== 1) {
-    walk(i === 0 ? -1 : 1);
-  }
   setButton(i, held);
   buttonEls[i].classList.toggle('pressed', held);
 }
@@ -40,7 +39,7 @@ buttonEls.forEach((el, i) => {
 });
 
 window.addEventListener('keydown', (e) => {
-  const i = KEYS[e.code];
+  const i = (diving ? DIVE_KEYS : KEYS)[e.code];
   if (i === undefined || e.metaKey || e.ctrlKey || e.altKey) {
     return;
   }
@@ -50,11 +49,12 @@ window.addEventListener('keydown', (e) => {
 });
 
 window.addEventListener('keyup', (e) => {
-  const i = KEYS[e.code];
-  if (i !== undefined) {
-    keys[i].delete(e.code);
-    refresh(i);
-  }
+  // The layout can rotate while a key is held, so release it from whichever button it pressed.
+  keys.forEach((held, i) => {
+    if (held.delete(e.code)) {
+      refresh(i);
+    }
+  });
 });
 
 window.addEventListener('blur', () => {
@@ -68,9 +68,7 @@ window.addEventListener('blur', () => {
 document.addEventListener('contextmenu', (e) => e.preventDefault());
 
 const lcdCanvas = document.getElementById('lcd');
-const sceneCanvas = document.getElementById('scene');
 const lcdCtx = lcdCanvas.getContext('2d');
-const sceneCtx = sceneCanvas.getContext('2d');
 
 function fitCanvas(canvas) {
   const dpr = window.devicePixelRatio || 1;
@@ -80,24 +78,24 @@ function fitCanvas(canvas) {
 
 const resize = new ResizeObserver(() => {
   fitCanvas(lcdCanvas);
-  fitCanvas(sceneCanvas);
 });
 resize.observe(lcdCanvas);
-resize.observe(sceneCanvas);
 
 function frame() {
+  if (diving !== isDiving()) {
+    diving = !diving;
+    document.body.classList.toggle('diving', diving);
+  }
   drawLcd(lcdCtx, lcd, backlight);
-  drawCharacter(sceneCtx);
   requestAnimationFrame(frame);
 }
 
 const startEl = document.getElementById('start');
-const ready = loadCharacter().then(() => requestAnimationFrame(frame));
+requestAnimationFrame(frame);
 
-startEl.addEventListener('click', async () => {
+startEl.addEventListener('click', () => {
   initAudio();
   startEl.hidden = true;
-  await ready;
   if (new URLSearchParams(location.search).has('boops')) {
     collectAllBoops();
   }

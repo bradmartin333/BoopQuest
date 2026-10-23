@@ -6,7 +6,6 @@ import {
   analogRead, random, randomSeed, tone, noTone,
 } from './arduino.js';
 import { LiquidCrystal } from './lcd.js';
-import { react } from './character.js';
 
 export const lcd = new LiquidCrystal();
 //Buttons and debouncing
@@ -45,7 +44,6 @@ async function DC() {
 
 //SOUNDS
 async function getGood() {
-  react('good');
   tone(buzzer, 415, 90);
   await delay(100);
   tone(buzzer, 466, 90);
@@ -55,7 +53,6 @@ async function getGood() {
   tone(buzzer, 466, 180);
 }
 async function getBad() {
-  react('bad');
   tone(buzzer, 415, 90);
   await delay(100);
   tone(buzzer, 350, 90);
@@ -63,13 +60,11 @@ async function getBad() {
   tone(buzzer, 349, 180);
 }
 async function spooky() {
-  react('spooky');
   tone(buzzer, 277, 90);
   await delay(150);
   tone(buzzer, 329, 45);
 }
 async function getBoop() {
-  react('boop');
   tone(buzzer, 1318, 125);
   await delay(250);
   tone(buzzer, 1174, 100);
@@ -85,7 +80,6 @@ async function getBoop() {
   tone(buzzer, 1760, 500);
 }
 async function getLocation() {
-  react('location');
   tone(buzzer, 391, 120);
   await delay(400);
   tone(buzzer, 391, 120);
@@ -115,7 +109,6 @@ async function getLocation() {
   tone(buzzer, 261, 270);
 }
 async function funkyTown() {
-  react('funky');
   tone(buzzer, 261, 368);
   await delay(408);
   tone(buzzer, 261, 91);
@@ -143,7 +136,6 @@ async function funkyTown() {
   tone(buzzer, 523, 736);
 }
 async function beatGame() {
-  react('beat');
   tone(buzzer, 233, 182);
   await delay(200);
   tone(buzzer, 261, 91);
@@ -1557,4 +1549,10 @@ async function playPiano() {
 export function collectAllBoops() {
   boop1 = 1; boop2 = 1; boop3 = 1; boop4 = 1; boop5 = 1; boop6 = 1; boop7 = 1; boop8 = 1;
   boopNum = 57;
+}
+
+// Not part of the sketch: true while the treasure dive is being played. On the device you turn the
+// box 90 degrees counterclockwise for it, so the right end of the LCD is the surface.
+export function isDiving() {
+  return progress == 90 && phaser == 2;
 }
